@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  min-height: 100vh;
+}
+
+.overview {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+
+  &__title {
+    font-size: 1.5rem;
+  }
+
+  &__temperature {
+    font-size: 3rem;
+  }
+
+  &__temp-name {
+    font-size: 1rem;
+  }
+
+  &__overview__temps {
+    font-size: 1rem;
+  }
+}

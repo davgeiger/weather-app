@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="stylesheet" href="src/spinner.scss" />
+    <link rel="stylesheet" href="src/style.scss" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wetter App</title>
+  </head>
+  <body>
+    <div class="lds-roller position">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div id="app">
+      <div class="details">
+        <div class="overview">
+          <p class="overview__title">Mannheim</p>
+          <p class="overview__temperature">26°</p>
+          <div class="overview__details">
+            <p class="overview__temp-name">Sonnig</p>
+            <p class="overview__temps">H: 25° T: 13°</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
