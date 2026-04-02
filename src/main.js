@@ -26,7 +26,7 @@ function displayData(data_current, data_forecast) {
 
   // Top section
   titleEl.innerText = cityName;
-  currenttempEl.innerText = temp;
+  currenttempEl.innerText = `${temp}°`;
   tempNameEl.innerText = tempName;
   tempsEl.innerText = `H: ${maxTemp}° T: ${minTemp}°`;
 
@@ -59,7 +59,7 @@ function displayData(data_current, data_forecast) {
 
   //  3d Forecast section
   const dayArray = data_forecast.forecast.forecastday;
-  console.log(dayArray);
+
   dayArray.forEach((day, index) => {
     let pane = document.createElement("div");
     let paneDay = document.createElement("p");
@@ -87,6 +87,33 @@ function displayData(data_current, data_forecast) {
     pane.append(paneDay, paneIcon, paneTemp, paneWind);
     pane3dViewEl.append(pane);
   });
+
+  // Single details section
+
+  const details = {
+    Feuchtigkeit: `${data_current.current.humidity}%`,
+    Gefühlt: `${data_current.current.feelslike_c}°`,
+    Sonnenaufgang: data_forecast.forecast.forecastday[0].astro.sunrise,
+    Sonnenuntergang: data_forecast.forecast.forecastday[0].astro.sunset,
+    Niederschlag: `${data_current.current.precip_mm}mm`,
+    "UV-Index": data_current.current.uv,
+  };
+  const singleDetailsEl = document.querySelector(".single-details");
+
+  for (let key in details) {
+    const singlePane = document.createElement("div");
+    const singlePaneTitle = document.createElement("p");
+    const singlePaneText = document.createElement("p");
+
+    singlePane.classList.add("single-details__pane-single");
+    singlePaneTitle.classList.add("single-details__pane-title");
+    singlePaneText.classList.add("single-details__pane-text");
+
+    singlePaneTitle.innerText = key;
+    singlePaneText.innerText = details[key];
+    singlePane.append(singlePaneTitle, singlePaneText);
+    singleDetailsEl.appendChild(singlePane);
+  }
 }
 
 function extract24hForecast(data_forecast) {
