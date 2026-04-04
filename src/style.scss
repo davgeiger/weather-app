@@ -5,8 +5,6 @@
 }
 
 body {
-  margin: 0.6rem;
-
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -17,6 +15,19 @@ body {
   }
 }
 
+.img {
+  background: url(/conditionImages/day/sunny.jpg);
+  background-position: center;
+  background-size: cover;
+}
+
+#app {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1rem;
+  height: 100vh;
+}
+
 .details {
   gap: 0.5rem;
   display: flex;
@@ -24,7 +35,6 @@ body {
 }
 
 .overview {
-  margin: 0 auto;
   padding: 2rem;
   text-align: center;
 
@@ -46,9 +56,6 @@ body {
 }
 
 .forecast-24h {
-  width: 100%;
-  border-radius: 5px;
-  box-shadow: 1px 1px 5px black;
   margin-bottom: 2rem;
   display: flex;
   flex-direction: column;
@@ -61,12 +68,14 @@ body {
   }
 
   &__pane-view {
-    width: 100%;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px hsl(0, 0%, 30%);
     overflow: auto;
-    margin: 0.5rem;
     display: flex;
     justify-content: flex-start;
     gap: 0.5rem;
+    background: transparent;
+    backdrop-filter: blur(2px);
 
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */
@@ -96,12 +105,14 @@ body {
 }
 
 .forecast-3d {
-  width: 100%;
   padding: 0.6rem;
   margin-bottom: 2rem;
+
   border-radius: 5px;
-  box-shadow: 1px 1px 5px black;
+  box-shadow: 1px 1px 2px hsl(0, 0%, 30%);
   overflow: auto;
+  background: transparent;
+  backdrop-filter: blur(3px);
 
   &__titletext {
     text-align: center;
@@ -127,7 +138,6 @@ body {
   gap: 1rem;
 
   &__pane-single {
-    border: 1px solid;
     border-radius: 5px;
     padding: 0.3rem;
     box-shadow: 1px 1px 3px hsl(0, 0%, 30%);
@@ -136,6 +146,9 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 0.3rem;
+
+    background: transparent;
+    backdrop-filter: blur(3px);
   }
 
   &__pane-title {

@@ -1,20 +1,22 @@
 import { fetchCurrentWeather, fetchForecast } from "./fetch";
+import { getConditionImagePath } from "./conditions";
 
 const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-
+const app = document.querySelector("#app");
 const spinner = document.querySelector(".lds-roller");
-spinner.style.display = "none";
+const detailsContainer = document.querySelector(".details");
 
 function displayData(data_current, data_forecast) {
-  const titleEl = document.querySelector(".overview__title");
-  const currenttempEl = document.querySelector(".overview__temperature");
-  const tempNameEl = document.querySelector(".overview__temp-name");
-  const tempsEl = document.querySelector(".overview__temps");
+  const overviewContainerEl = document.createElement("div");
+  const titleEl = document.createElement("p");
+  const currenttempEl = document.createElement("p");
+  const detailsEl = document.createElement("div");
+  const tempNameEl = document.createElement("p");
+  const tempsEl = document.createElement("p");
 
-  const forecastText = document.querySelector(".forecast-24h__titletext");
-  const paneViewEl = document.querySelector(".forecast-24h__pane-view");
-
-  const pane3dViewEl = document.querySelector(".forecast-3d__pane-view");
+  const forecastContainer = document.createElement("div");
+  const forecastText = document.createElement("p");
+  const paneViewEl = document.createElement("div");
 
   const cityName = data_current.location.name;
   const temp = data_current.current.temp_c;
@@ -25,12 +27,28 @@ function displayData(data_current, data_forecast) {
   const forecastExtract = extract24hForecast(data_forecast);
 
   // Top section
+  overviewContainerEl.classList.add("overview");
+  titleEl.classList.add("overview__title");
+  currenttempEl.classList.add("overview__temperature");
+
+  detailsEl.classList.add("overview__details");
+  tempNameEl.classList.add("overview__temp-name");
+  tempsEl.classList.add("overview__temps");
+
   titleEl.innerText = cityName;
   currenttempEl.innerText = `${temp}°`;
   tempNameEl.innerText = tempName;
   tempsEl.innerText = `H: ${maxTemp}° T: ${minTemp}°`;
 
+  detailsEl.append(tempNameEl, tempsEl);
+  overviewContainerEl.append(titleEl, currenttempEl, detailsEl);
+  detailsContainer.append(overviewContainerEl);
+
   // 24h Forecast section
+  forecastContainer.classList.add("forecast-24h");
+  forecastText.classList.add("forecast-24h__titletext");
+  paneViewEl.classList.add("forecast-24h__pane-view");
+
   forecastText.innerText = `Heute ${data_current.current.condition.text}. Wind bis zu ${data_current.current.wind_kph} km/h`;
 
   forecastExtract.forEach((hour, index) => {
@@ -55,11 +73,21 @@ function displayData(data_current, data_forecast) {
 
     pane.append(paneHour, paneIcon, paneTemp);
     paneViewEl.append(pane);
+    detailsContainer.append(paneViewEl);
   });
 
   //  3d Forecast section
-  const dayArray = data_forecast.forecast.forecastday;
+  const forecast3dContainer = document.createElement("div");
+  const forecast3dTitle = document.createElement("p");
+  const forecast3dPaneView = document.createElement("div");
 
+  forecast3dContainer.classList.add("forecast-3d");
+  forecast3dTitle.classList.add("forecast-3d__titletext");
+  forecast3dPaneView.classList.add("forecast-3d__pane-view");
+
+  forecast3dTitle.innerText = "Vorhersage für die nächsten 3 Tage:";
+
+  const dayArray = data_forecast.forecast.forecastday;
   dayArray.forEach((day, index) => {
     let pane = document.createElement("div");
     let paneDay = document.createElement("p");
@@ -85,11 +113,12 @@ function displayData(data_current, data_forecast) {
     paneWind.innerText = `Wind: ${day.day.maxwind_kph} km/h`;
 
     pane.append(paneDay, paneIcon, paneTemp, paneWind);
-    pane3dViewEl.append(pane);
+    forecast3dPaneView.append(pane);
+    forecast3dContainer.append(forecast3dPaneView);
+    detailsContainer.append(forecast3dContainer);
   });
 
   // Single details section
-
   const details = {
     Feuchtigkeit: `${data_current.current.humidity}%`,
     Gefühlt: `${data_current.current.feelslike_c}°`,
@@ -114,6 +143,11 @@ function displayData(data_current, data_forecast) {
     singlePane.append(singlePaneTitle, singlePaneText);
     singleDetailsEl.appendChild(singlePane);
   }
+
+  const imageCode = data_current.current.condition.code;
+  const backgroundImage = getConditionImagePath(imageCode);
+  app.classList.add("img");
+  app.style.backgroundImage = `url(${backgroundImage})`;
 }
 
 function extract24hForecast(data_forecast) {
@@ -133,10 +167,12 @@ function extract24hForecast(data_forecast) {
 }
 
 async function main() {
+  app.style.display = "none";
   spinner.style.display = "block";
   const data_current = await fetchCurrentWeather();
   const data_forecast = await fetchForecast();
   spinner.style.display = "none";
+  app.style.display = "block";
 
   displayData(data_current, data_forecast);
 }
