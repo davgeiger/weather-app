@@ -12,6 +12,7 @@ cityEl.onclick = () => {
 async function main() {
   const data_current = await fetchCurrentWeather(cityName);
   const data_forecast = await fetchForecast(cityName);
+
   location.assign("details.html");
   displayData(data_current, data_forecast);
 }

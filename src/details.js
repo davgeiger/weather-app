@@ -5,8 +5,8 @@ export function displayData(data_current, data_forecast) {
 
   const app = document.querySelector("#app");
   const spinner = document.querySelector(".lds-roller");
-
   const detailsContainer = document.querySelector(".details");
+
   const overviewContainerEl = document.createElement("div");
   const titleEl = document.createElement("p");
   const currenttempEl = document.createElement("p");
