@@ -1,0 +1,70 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.container {
+  margin: 1rem;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  margin-bottom: 1.5rem;
+}
+
+.city-input {
+  font-size: 1.2rem;
+  padding: 0.3rem;
+  margin-bottom: 1rem;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.saved-cities {
+  display: flex;
+  flex-direction: column;
+}
+
+.city {
+  display: flex;
+  justify-content: space-between;
+  min-height: 100px;
+  padding: 0.5rem 1rem;
+  background-color: lightblue;
+
+  &-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    &__name {
+      font-size: 1.3rem;
+    }
+
+    &__country {
+      font-size: 1.1rem;
+    }
+
+    &__weather-info {
+      font-size: 1.2rem;
+    }
+  }
+
+  &-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    &__curr-temp {
+      font-size: 1.8rem;
+      text-align: end;
+    }
+
+    &__temp-hilo {
+      font-size: 1.2rem;
+    }
+  }
+}

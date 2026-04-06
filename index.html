@@ -1,27 +1,37 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <link rel="stylesheet" href="src/spinner.scss" />
-    <link rel="stylesheet" href="src/style.scss" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="src/main.scss" />
     <title>Wetter App</title>
   </head>
   <body>
-    <div class="lds-roller position">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    <div id="app">
-      <div class="details"></div>
-      <div class="single-details"></div>
+    <div class="container">
+      <h1 class="title">Wetter</h1>
+      <input
+        type="text"
+        id="city-input"
+        class="city-input"
+        placeholder="Nach Stadt suchen..."
+      />
+      <div class="saved-cities">
+        <div class="city">
+          <div class="city-left">
+            <div class="city-left__names">
+              <p class="city-left__name">Mannheim</p>
+              <p class="city-left__country">Germany</p>
+            </div>
+            <div class="city-left__weather-info">Sonnig</div>
+          </div>
+          <div class="city-right">
+            <p class="city-right__curr-temp">22°</p>
+            <p class="city-right__temp-hilo">H:21° T:11°</p>
+          </div>
+        </div>
+      </div>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>
