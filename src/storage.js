@@ -9,5 +9,15 @@ export function saveCity(city) {
   if (cities.includes(city)) return;
 
   cities = [...cities, city];
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(cities));
+}
+
+export function deleteSavedCity(city) {
+  let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  const filteredCites = cities.filter((element) => {
+    return element !== city;
+  });
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredCites));
 }

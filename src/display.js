@@ -1,11 +1,15 @@
 import { getConditionImagePath } from "./conditions";
-import { getSavedCities } from "./storage";
+import { getSavedCities, deleteSavedCity } from "./storage";
 import { fetchForecast } from "./fetch";
+import { showSpinner } from "./spinner";
+
+const app = document.querySelector(".container");
 
 export function displayMain() {
-  const app = document.querySelector(".container");
   app.innerHTML = "";
 
+  const titleContainer = document.createElement("div");
+  const adjustButton = document.createElement("a");
   const mainTitle = document.createElement("h1");
   const input = document.createElement("input");
   const savedCities = document.createElement("div");
@@ -15,6 +19,14 @@ export function displayMain() {
   mainTitle.classList.add("title");
   mainTitle.innerText = "Wetter";
 
+  titleContainer.classList.add("title-container");
+  adjustButton.classList.add("adjust-button");
+
+  adjustButton.innerText = "Bearbeiten";
+  adjustButton.addEventListener("click", addDeleteButtons);
+
+  titleContainer.append(mainTitle, adjustButton);
+
   input.type = "text";
   input.classList.add("city-input");
   input.id = "city-input";
@@ -22,12 +34,13 @@ export function displayMain() {
 
   savedCities.classList.add("saved-cities");
 
-  app.append(mainTitle, input, savedCities);
+  app.append(titleContainer, input, savedCities);
 }
 
 export function displayDataSmall(data_forecast) {
   const savedCities = document.querySelector(".saved-cities");
 
+  const cityContainer = document.createElement("div");
   const singleCity = document.createElement("div");
   const cityLeft = document.createElement("div");
   const cityNames = document.createElement("div");
@@ -41,6 +54,7 @@ export function displayDataSmall(data_forecast) {
   const minTemp = data_forecast.forecast.forecastday[0].day.mintemp_c;
   const maxTemp = data_forecast.forecast.forecastday[0].day.maxtemp_c;
 
+  cityContainer.classList.add("city-container");
   singleCity.classList.add("city");
   cityLeft.classList.add("city-left");
   cityNames.classList.add("city-left__names");
@@ -51,7 +65,8 @@ export function displayDataSmall(data_forecast) {
   cityCurrTemp.classList.add("city-right__curr-temp");
   cityTempHiLo.classList.add("city-right__temp-hilo");
 
-  savedCities.append(singleCity);
+  savedCities.append(cityContainer);
+  cityContainer.append(singleCity);
   singleCity.append(cityLeft, cityRight);
   cityLeft.append(cityNames, cityWeatherInfo);
   cityNames.append(cityName, cityCountry);
@@ -71,8 +86,6 @@ export function displayDataSmall(data_forecast) {
 
 export function displayDataLarge(data_forecast) {
   const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-
-  const app = document.querySelector(".container");
 
   const detailsContainer = document.createElement("div");
   const overviewContainerEl = document.createElement("div");
@@ -247,7 +260,8 @@ function extract24hForecast(data_forecast) {
 }
 
 function insertButtons(cityName) {
-  const app = document.querySelector(".container");
+  const STORAGE_KEY = "saved-cities";
+
   app.innerHTML += `
   <div class="buttons">
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="back-button">
@@ -255,8 +269,6 @@ function insertButtons(cityName) {
   </svg>  
   </div>
 `;
-
-  const STORAGE_KEY = "saved-cities";
 
   let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   if (!cities.includes(cityName))
@@ -267,18 +279,25 @@ function insertButtons(cityName) {
   `;
 
   document.querySelector(".back-button").addEventListener("click", () => {
-    displayMain();
-    displayCities();
+    display();
   });
 }
 
-export async function displayCities() {
+export async function display() {
   const cities = getSavedCities();
+  const data = [];
+
+  showSpinner();
 
   for (const city of cities) {
-    const forecast_data = await fetchForecast(city);
-    displayDataSmall(forecast_data);
+    data.push(await fetchForecast(city));
   }
+
+  displayMain();
+
+  data.forEach((forecast_data) => {
+    displayDataSmall(forecast_data);
+  });
 
   const cityEls = document.querySelectorAll(".city");
 
@@ -291,6 +310,51 @@ async function getSelected(event) {
   const city = event.target
     .closest(".city")
     .querySelector(".city-left__name").innerText;
+
+  showSpinner();
+
   const forecast_data = await fetchForecast(city);
   displayDataLarge(forecast_data);
+}
+
+function addDeleteButtons() {
+  const allCityEl = document.querySelectorAll(".city-container");
+
+  allCityEl.forEach((city) => {
+    const buttonEl = city.querySelector(".delete-button");
+    if (buttonEl) {
+      buttonEl.remove();
+    } else {
+      city.innerHTML =
+        `<svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="delete-button"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+        />
+      </svg>` + city.innerHTML;
+    }
+  });
+
+  const deleteButtons = document.querySelectorAll(".delete-button");
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", deleteCity);
+  });
+}
+
+function deleteCity(event) {
+  const city = event.target
+    .closest(".city-container")
+    .querySelector(".city-left__name").innerText;
+  console.log(city);
+  deleteSavedCity(city);
+  event.target.closest(".city-container").remove();
 }
