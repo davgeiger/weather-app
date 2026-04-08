@@ -1,10 +1,6 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
+  background-color: hsl(0, 0%, 15%);
+  color: white;
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -15,17 +11,11 @@ body {
   }
 }
 
-.img {
+.detail-img {
+  height: 100vh;
   background: url(/conditionImages/day/sunny.jpg);
   background-position: center;
   background-size: cover;
-}
-
-#app {
-  width: 100%;
-  margin: 0 auto;
-  padding: 1rem 1rem;
-  height: 100vh;
 }
 
 .details {
@@ -110,7 +100,7 @@ body {
 
   border-radius: 5px;
   box-shadow: 1px 1px 2px hsl(0, 0%, 30%);
-  overflow: auto;
+
   background: transparent;
   backdrop-filter: blur(3px);
 

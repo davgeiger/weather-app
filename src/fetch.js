@@ -6,13 +6,6 @@ const API_KEY = "3f222dfacdc7496d8f2111550263003";
 const lang = "de";
 const forecastDays = 3;
 
-export async function fetchCurrentWeather(cityName) {
-  const url = `${baseURL}${endpoint_current}?key=${API_KEY}&lang=${lang}&q=${cityName}`;
-  const response = await fetch(url);
-  const json = response.json();
-  return json;
-}
-
 export async function fetchForecast(cityName) {
   const url = `${baseURL}${endpoint_forecast}?key=${API_KEY}&lang=${lang}&q=${cityName}&days=${forecastDays}`;
   const response = await fetch(url);

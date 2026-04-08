@@ -1,18 +1,31 @@
-import { displayData } from "./details";
+import { displayDataLarge, displayDataSmall, displayMain } from "./display";
+import { fetchForecast } from "./fetch";
+import { showSpinner } from "./spinner";
 
-import { fetchCurrentWeather, fetchForecast } from "./fetch";
-
-const cityEl = document.querySelector(".city");
-const cityName = document.querySelector(".city-left__name").innerText;
-
-cityEl.onclick = () => {
-  main();
-};
+const cities = ["Mannheim", "Weingarten"];
 
 async function main() {
-  const data_current = await fetchCurrentWeather(cityName);
-  const data_forecast = await fetchForecast(cityName);
+  showSpinner();
+  displayMain();
 
-  location.assign("details.html");
-  displayData(data_current, data_forecast);
+  for (const city of cities) {
+    const forecast_data = await fetchForecast(city);
+    displayDataSmall(forecast_data);
+  }
+
+  const cityEls = document.querySelectorAll(".city");
+
+  for (const city of cityEls) {
+    city.addEventListener("click", getSelected);
+  }
 }
+
+async function getSelected(event) {
+  const city = event.target
+    .closest(".city")
+    .querySelector(".city-left__name").innerText;
+  const forecast_data = await fetchForecast(city);
+  displayDataLarge(forecast_data);
+}
+
+main();

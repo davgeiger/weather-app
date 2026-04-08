@@ -1,12 +1,76 @@
 import { getConditionImagePath } from "./conditions";
 
-export function displayData(data_current, data_forecast) {
+export function displayMain() {
+  const app = document.querySelector(".container");
+  app.innerHTML = "";
+
+  const mainTitle = document.createElement("h1");
+  const input = document.createElement("input");
+  const savedCities = document.createElement("div");
+
+  mainTitle.classList.add("title");
+  mainTitle.innerText = "Wetter";
+
+  input.type = "text";
+  input.classList.add("city-input");
+  input.id = "city-input";
+  input.placeholder = "Nach Stadt suchen...";
+
+  savedCities.classList.add("saved-cities");
+
+  app.append(mainTitle, input, savedCities);
+}
+
+export function displayDataSmall(data_forecast) {
+  const savedCities = document.querySelector(".saved-cities");
+
+  const singleCity = document.createElement("div");
+  const cityLeft = document.createElement("div");
+  const cityNames = document.createElement("div");
+  const cityName = document.createElement("p");
+  const cityCountry = document.createElement("p");
+  const cityWeatherInfo = document.createElement("p");
+  const cityRight = document.createElement("div");
+  const cityCurrTemp = document.createElement("p");
+  const cityTempHiLo = document.createElement("p");
+
+  const minTemp = data_forecast.forecast.forecastday[0].day.mintemp_c;
+  const maxTemp = data_forecast.forecast.forecastday[0].day.maxtemp_c;
+
+  singleCity.classList.add("city");
+  cityLeft.classList.add("city-left");
+  cityNames.classList.add("city-left__names");
+  cityName.classList.add("city-left__name");
+  cityCountry.classList.add("city-left__country");
+  cityWeatherInfo.classList.add("city-left__weather-info");
+  cityRight.classList.add("city-right");
+  cityCurrTemp.classList.add("city-right__curr-temp");
+  cityTempHiLo.classList.add("city-right__temp-hilo");
+
+  savedCities.append(singleCity);
+  singleCity.append(cityLeft, cityRight);
+  cityLeft.append(cityNames, cityWeatherInfo);
+  cityNames.append(cityName, cityCountry);
+  cityRight.append(cityCurrTemp, cityTempHiLo);
+
+  cityName.innerText = data_forecast.location.name;
+  cityCountry.innerText = data_forecast.location.country;
+  cityWeatherInfo.innerText = data_forecast.current.condition.text;
+  cityCurrTemp.innerText = `${data_forecast.current.temp_c}°`;
+  cityTempHiLo.innerText = `H:${maxTemp}° T:${minTemp}°`;
+
+  const imageCode = data_forecast.current.condition.code;
+  const backgroundImage = getConditionImagePath(imageCode);
+
+  singleCity.style.backgroundImage = `url(${backgroundImage})`;
+}
+
+export function displayDataLarge(data_forecast) {
   const weekDays = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
 
-  const app = document.querySelector("#app");
-  const spinner = document.querySelector(".lds-roller");
-  const detailsContainer = document.querySelector(".details");
+  const app = document.querySelector(".container");
 
+  const detailsContainer = document.createElement("div");
   const overviewContainerEl = document.createElement("div");
   const titleEl = document.createElement("p");
   const currenttempEl = document.createElement("p");
@@ -18,23 +82,22 @@ export function displayData(data_current, data_forecast) {
   const forecastText = document.createElement("p");
   const paneViewEl = document.createElement("div");
 
-  const cityName = data_current.location.name;
-  const temp = data_current.current.temp_c;
-  const tempName = data_current.current.condition.text;
+  const cityName = data_forecast.location.name;
+  const temp = data_forecast.current.temp_c;
+  const tempName = data_forecast.current.condition.text;
   const minTemp = data_forecast.forecast.forecastday[0].day.mintemp_c;
   const maxTemp = data_forecast.forecast.forecastday[0].day.maxtemp_c;
 
   const forecastExtract = extract24hForecast(data_forecast);
 
-  console.log(data_current, data_forecast);
-
-  spinner.style.display = "none";
+  app.innerHTML = "";
 
   // Top section
   overviewContainerEl.classList.add("overview");
   titleEl.classList.add("overview__title");
   currenttempEl.classList.add("overview__temperature");
 
+  detailsContainer.classList.add("details");
   detailsEl.classList.add("overview__details");
   tempNameEl.classList.add("overview__temp-name");
   tempsEl.classList.add("overview__temps");
@@ -53,7 +116,7 @@ export function displayData(data_current, data_forecast) {
   forecastText.classList.add("forecast-24h__titletext");
   paneViewEl.classList.add("forecast-24h__pane-view");
 
-  forecastText.innerText = `Heute ${data_current.current.condition.text}. Wind bis zu ${data_current.current.wind_kph} km/h`;
+  forecastText.innerText = `Heute ${data_forecast.current.condition.text}. Wind bis zu ${data_forecast.current.wind_kph} km/h`;
 
   forecastExtract.forEach((hour, index) => {
     let pane = document.createElement("div");
@@ -77,8 +140,9 @@ export function displayData(data_current, data_forecast) {
 
     pane.append(paneHour, paneIcon, paneTemp);
     paneViewEl.append(pane);
-    detailsContainer.append(paneViewEl);
   });
+
+  forecastContainer.append(paneViewEl);
 
   //  3d Forecast section
   const forecast3dContainer = document.createElement("div");
@@ -118,20 +182,21 @@ export function displayData(data_current, data_forecast) {
 
     pane.append(paneDay, paneIcon, paneTemp, paneWind);
     forecast3dPaneView.append(pane);
-    forecast3dContainer.append(forecast3dPaneView);
-    detailsContainer.append(forecast3dContainer);
   });
+
+  forecast3dContainer.append(forecast3dPaneView);
 
   // Single details section
   const details = {
-    Feuchtigkeit: `${data_current.current.humidity}%`,
-    Gefühlt: `${data_current.current.feelslike_c}°`,
+    Feuchtigkeit: `${data_forecast.current.humidity}%`,
+    Gefühlt: `${data_forecast.current.feelslike_c}°`,
     Sonnenaufgang: data_forecast.forecast.forecastday[0].astro.sunrise,
     Sonnenuntergang: data_forecast.forecast.forecastday[0].astro.sunset,
-    Niederschlag: `${data_current.current.precip_mm}mm`,
-    "UV-Index": data_current.current.uv,
+    Niederschlag: `${data_forecast.current.precip_mm}mm`,
+    "UV-Index": data_forecast.current.uv,
   };
-  const singleDetailsEl = document.querySelector(".single-details");
+  const singleDetailsEl = document.createElement("div");
+  singleDetailsEl.classList.add("single-details");
 
   for (let key in details) {
     const singlePane = document.createElement("div");
@@ -148,10 +213,15 @@ export function displayData(data_current, data_forecast) {
     singleDetailsEl.appendChild(singlePane);
   }
 
-  const imageCode = data_current.current.condition.code;
+  const imageCode = data_forecast.current.condition.code;
   const backgroundImage = getConditionImagePath(imageCode);
-  app.classList.add("img");
+  app.classList.add("detail-img");
   app.style.backgroundImage = `url(${backgroundImage})`;
+
+  app.append(overviewContainerEl);
+  app.append(forecastContainer);
+  app.append(forecast3dContainer);
+  app.append(singleDetailsEl);
 }
 
 function extract24hForecast(data_forecast) {
