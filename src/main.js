@@ -1,8 +1,12 @@
 import { displayDataLarge, displayDataSmall, displayMain } from "./display";
 import { fetchForecast } from "./fetch";
 import { showSpinner } from "./spinner";
+import { getSavedCities, saveCity } from "./storage";
 
-const cities = ["Mannheim", "Weingarten"];
+saveCity("Mannheim");
+saveCity("Weingarten");
+saveCity("Ravensburg");
+const cities = getSavedCities();
 
 async function main() {
   showSpinner();
