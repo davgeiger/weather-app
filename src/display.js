@@ -1,4 +1,6 @@
 import { getConditionImagePath } from "./conditions";
+import { getSavedCities } from "./storage";
+import { fetchForecast } from "./fetch";
 
 export function displayMain() {
   const app = document.querySelector(".container");
@@ -7,6 +9,8 @@ export function displayMain() {
   const mainTitle = document.createElement("h1");
   const input = document.createElement("input");
   const savedCities = document.createElement("div");
+
+  app.style.backgroundImage = "";
 
   mainTitle.classList.add("title");
   mainTitle.innerText = "Wetter";
@@ -195,6 +199,7 @@ export function displayDataLarge(data_forecast) {
     Niederschlag: `${data_forecast.current.precip_mm}mm`,
     "UV-Index": data_forecast.current.uv,
   };
+
   const singleDetailsEl = document.createElement("div");
   singleDetailsEl.classList.add("single-details");
 
@@ -216,8 +221,9 @@ export function displayDataLarge(data_forecast) {
   const imageCode = data_forecast.current.condition.code;
   const backgroundImage = getConditionImagePath(imageCode);
   app.classList.add("detail-img");
-  app.style.backgroundImage = `url(${backgroundImage})`;
+  app.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${backgroundImage})`;
 
+  insertButtons(cityName);
   app.append(overviewContainerEl);
   app.append(forecastContainer);
   app.append(forecast3dContainer);
@@ -238,4 +244,53 @@ function extract24hForecast(data_forecast) {
   hours = hours.slice(currentHour, currentHour + 24);
 
   return hours;
+}
+
+function insertButtons(cityName) {
+  const app = document.querySelector(".container");
+  app.innerHTML += `
+  <div class="buttons">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="back-button">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+  </svg>  
+  </div>
+`;
+
+  const STORAGE_KEY = "saved-cities";
+
+  let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  if (!cities.includes(cityName))
+    app.querySelector(".buttons").innerHTML += `
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="fav-button">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+  </svg>
+  `;
+
+  document.querySelector(".back-button").addEventListener("click", () => {
+    displayMain();
+    displayCities();
+  });
+}
+
+export async function displayCities() {
+  const cities = getSavedCities();
+
+  for (const city of cities) {
+    const forecast_data = await fetchForecast(city);
+    displayDataSmall(forecast_data);
+  }
+
+  const cityEls = document.querySelectorAll(".city");
+
+  for (const city of cityEls) {
+    city.addEventListener("click", getSelected);
+  }
+}
+
+async function getSelected(event) {
+  const city = event.target
+    .closest(".city")
+    .querySelector(".city-left__name").innerText;
+  const forecast_data = await fetchForecast(city);
+  displayDataLarge(forecast_data);
 }
