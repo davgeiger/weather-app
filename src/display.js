@@ -317,8 +317,12 @@ async function getSelected(event) {
   displayDataLarge(forecast_data);
 }
 
-function addDeleteButtons() {
+function addDeleteButtons(event) {
   const allCityEl = document.querySelectorAll(".city-container");
+  const buttonName = event.target.innerText;
+
+  if (buttonName === "Bearbeiten") event.target.innerText = "Fertig";
+  else event.target.innerText = "Bearbeiten";
 
   allCityEl.forEach((city) => {
     const buttonEl = city.querySelector(".delete-button");
