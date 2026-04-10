@@ -1,0 +1,36 @@
+@use "sass:color";
+
+.city-search__input {
+  font-size: 1.2rem;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.city-search__results {
+  position: absolute;
+  width: 100%;
+}
+
+.result {
+  padding: 0.3rem;
+  background-color: black;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+
+  &__city {
+    font-size: 1.2rem;
+  }
+
+  &__country {
+    font-size: 1.1rem;
+  }
+
+  &:hover {
+    background-color: color.adjust(black, $lightness: 10%);
+  }
+}

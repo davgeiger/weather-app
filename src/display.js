@@ -1,7 +1,8 @@
 import { getConditionImagePath } from "./conditions";
-import { getSavedCities, deleteSavedCity } from "./storage";
+import { getSavedCities, deleteSavedCity, saveCity } from "./storage";
 import { fetchForecast } from "./fetch";
 import { showSpinner } from "./spinner";
+import { dsearch } from "./search";
 
 const app = document.querySelector(".container");
 
@@ -11,16 +12,22 @@ export function displayMain() {
   const titleContainer = document.createElement("div");
   const adjustButton = document.createElement("a");
   const mainTitle = document.createElement("h1");
+  const inputContainer = document.createElement("div");
   const input = document.createElement("input");
+  const searchContainer = document.createElement("div");
   const savedCities = document.createElement("div");
 
   app.style.backgroundImage = "";
 
   mainTitle.classList.add("title");
-  mainTitle.innerText = "Wetter";
-
   titleContainer.classList.add("title-container");
   adjustButton.classList.add("adjust-button");
+  inputContainer.classList.add("city-search");
+  input.classList.add("city-search__input");
+  searchContainer.classList.add("city-search__results");
+  savedCities.classList.add("saved-cities");
+
+  mainTitle.innerText = "Wetter";
 
   adjustButton.innerText = "Bearbeiten";
   adjustButton.addEventListener("click", addDeleteButtons);
@@ -28,13 +35,15 @@ export function displayMain() {
   titleContainer.append(mainTitle, adjustButton);
 
   input.type = "text";
-  input.classList.add("city-input");
   input.id = "city-input";
   input.placeholder = "Nach Stadt suchen...";
+  input.oninput = () => {
+    dsearch(input.value);
+  };
 
-  savedCities.classList.add("saved-cities");
+  inputContainer.append(input, searchContainer);
 
-  app.append(titleContainer, input, savedCities);
+  app.append(titleContainer, inputContainer, savedCities);
 }
 
 export function displayDataSmall(data_forecast) {
@@ -271,12 +280,18 @@ function insertButtons(cityName) {
 `;
 
   let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  if (!cities.includes(cityName))
+  if (!cities.includes(cityName)) {
     app.querySelector(".buttons").innerHTML += `
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="fav-button">
   <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
   </svg>
   `;
+
+    document.querySelector(".fav-button").addEventListener("click", () => {
+      saveCity(cityName);
+      document.querySelector(".fav-button").remove();
+    });
+  }
 
   document.querySelector(".back-button").addEventListener("click", () => {
     display();
@@ -358,7 +373,7 @@ function deleteCity(event) {
   const city = event.target
     .closest(".city-container")
     .querySelector(".city-left__name").innerText;
-  console.log(city);
+
   deleteSavedCity(city);
   event.target.closest(".city-container").remove();
 }

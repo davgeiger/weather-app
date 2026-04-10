@@ -1,8 +1,7 @@
 const baseURL = "http://api.weatherapi.com/v1";
-const endpoint_current = "/current.json";
 const endpoint_forecast = "/forecast.json";
 
-const API_KEY = "3f222dfacdc7496d8f2111550263003";
+const API_KEY = "13c229db6b6d457fb73142207261004";
 const lang = "de";
 const forecastDays = 3;
 
