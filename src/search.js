@@ -2,7 +2,7 @@ import { showSpinner } from "./spinner";
 import { fetchForecast } from "./fetch";
 import { displayDataLarge } from "./display";
 
-const baseURL = "http://api.weatherapi.com/v1";
+const baseURL = "https://api.weatherapi.com/v1";
 const endpoint_search = "/search.json";
 
 const API_KEY = "13c229db6b6d457fb73142207261004";
