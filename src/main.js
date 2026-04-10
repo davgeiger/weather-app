@@ -1,6 +1,5 @@
 import { display } from "./display";
-
-import { getSavedCities, saveCity } from "./storage";
+import { getSavedCities } from "./storage";
 
 const cities = getSavedCities();
 

@@ -4,19 +4,24 @@ export function getSavedCities() {
   return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 }
 
-export function saveCity(city) {
+export function saveCity(cityName, id) {
   let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  if (cities.includes(city)) return;
+  const found = cities.find((city) => {
+    return city.id === Number(id);
+  });
 
-  cities = [...cities, city];
+  if (found === undefined) {
+    let city = { id, cityName };
+    cities = [...cities, city];
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(cities));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cities));
+  }
 }
 
 export function deleteSavedCity(city) {
   let cities = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
   const filteredCites = cities.filter((element) => {
-    return element !== city;
+    return element.cityName !== city;
   });
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredCites));

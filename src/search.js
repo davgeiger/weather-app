@@ -26,6 +26,7 @@ function displayResults(results) {
     const country = document.createElement("p");
 
     singleResult.classList.add("result");
+    singleResult.setAttribute("id", result.id);
     city.classList.add("result__city");
     country.classList.add("result__country");
 
@@ -71,11 +72,12 @@ async function getSelected(event) {
   const city = event.target
     .closest(".result")
     .querySelector(".result__city").innerText;
+  const cityID = event.target.closest(".result").id;
 
   showSpinner();
 
   const forecast_data = await fetchForecast(city);
-  displayDataLarge(forecast_data);
+  displayDataLarge(forecast_data, cityID);
 }
 
 export const dsearch = debounce(search, 500);
