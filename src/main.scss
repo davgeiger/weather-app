@@ -1,5 +1,7 @@
 @use "variables" as *;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -17,6 +19,7 @@ a {
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  font-family: "Inter", sans-serif;
 }
 
 .title-container {

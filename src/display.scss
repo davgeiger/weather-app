@@ -70,14 +70,15 @@ body {
   }
 
   &__pane-view {
+    padding: 0.5rem;
     border-radius: 5px;
-    box-shadow: 1px 1px 2px hsl(0, 0%, 30%);
+    box-shadow: 2px 2px 2px hsl(0, 0%, 30%);
     overflow: auto;
     display: flex;
     justify-content: flex-start;
     gap: 0.5rem;
     background: transparent;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
 
     /* Hide scrollbar for IE, Edge and Firefox */
     -ms-overflow-style: none; /* IE and Edge */
@@ -111,10 +112,10 @@ body {
   margin-bottom: 2rem;
 
   border-radius: 5px;
-  box-shadow: 1px 1px 2px hsl(0, 0%, 30%);
+  box-shadow: 2px 2px 2px hsl(0, 0%, 30%);
 
   background: transparent;
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(4px);
 
   &__titletext {
     text-align: center;
@@ -142,7 +143,7 @@ body {
   &__pane-single {
     border-radius: 5px;
     padding: 0.3rem;
-    box-shadow: 1px 1px 3px hsl(0, 0%, 30%);
+    box-shadow: 2px 2px 2px hsl(0, 0%, 30%);
 
     display: flex;
     flex-direction: column;
@@ -150,7 +151,7 @@ body {
     gap: 0.3rem;
 
     background: transparent;
-    backdrop-filter: blur(3px);
+    backdrop-filter: blur(4px);
   }
 
   &__pane-title {
